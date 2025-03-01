@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Sound Favorites</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #e6f7ff;
+      padding: 15px;
+      touch-action: manipulation;
+    }
+    
+    .sound-button {
+      background-color: white;
+      border-radius: 30px;
+      padding: 6px 15px;
+      margin: 5px;
+      border: 1px solid #dee2e6;
+      transition: all 0.2s;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      font-weight: bold;
+      color: #1a3b5d;
+      font-size: 0.9rem;
+    }
+    
+    .sound-button:hover {
+      border-color: #1a3b5d;
+    }
+    
+    .sound-button.selected {
+      background-color: #d4edff;
+      border-color: #1a3b5d;
+    }
+    
+    .icon {
+      width: 24px;
+      height: 24px;
+      margin-right: 8px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+    }
+    
+    .get-started-btn {
+      background-color: #4e8cff;
+      color: white;
+      border-radius: 30px;
+      font-size: 1.2rem;
+      padding: 10px 25px;
+      margin-top: 15px;
+      border: none;
+      transition: all 0.2s;
+      width: 80%;
+      max-width: 300px;
+    }
+    
+    .get-started-btn:hover {
+      background-color: #3e7bef;
+    }
+    
+    .main-title {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #1a3b5d;
+      margin-bottom: 15px;
+    }
+    
+    .sound-container {
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+    
+    @media (max-width: 576px) {
+      .sound-button {
+        padding: 5px 12px;
+        margin: 4px;
+        font-size: 0.8rem;
+      }
+      
+      .icon {
+        width: 20px;
+        height: 20px;
+        margin-right: 6px;
+      }
+      
+      .main-title {
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="row justify-content-center text-center">
+      <div class="col-12">
+        <h1 class="main-title">Choose sound favorite</h1>
+        
+        <div class="sound-container d-flex flex-wrap justify-content-center" id="soundContainer">
+          <!-- Sound buttons will be dynamically added here -->
+        </div>
+        
+        <div class="text-center mt-3">
+          <button class="get-started-btn btn" id="getStartedBtn">Get Started</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Sound data with IDs and icon colors
+    const sounds = [
+      { id: 1, name: "Airhorn", icon: "📣", bgColor: "#ffdddd" },
+      { id: 2, name: "Fart Sound", icon: "💨", bgColor: "#d6e9ff" },
+      { id: 3, name: "Hair Clipper", icon: "✂️", bgColor: "#e0d6ff" },
+      { id: 4, name: "Baby Sneeze", icon: "👶", bgColor: "#ffdfd6" },
+      { id: 5, name: "Breaking", icon: "🔨", bgColor: "#ffe6e6" },
+      { id: 6, name: "Burp", icon: "😋", bgColor: "#d8ffe6" },
+      { id: 7, name: "Car", icon: "🚗", bgColor: "#e6e6ff" },
+      { id: 8, name: "Door Bell", icon: "🔔", bgColor: "#fff9d6" },
+      { id: 9, name: "Gun", icon: "🔫", bgColor: "#daeeff" },
+      { id: 10, name: "Laughing & Clapping", icon: "👏", bgColor: "#d6f0ff" },
+      { id: 11, name: "Man Cough", icon: "😷", bgColor: "#e6ffe6" },
+      { id: 12, name: "Man Sneeze", icon: "🤧", bgColor: "#ffdbf0" },
+      { id: 13, name: "Police", icon: "👮", bgColor: "#d6fffa" },
+      { id: 14, name: "Siren Head", icon: "🔊", bgColor: "#f7d6ff" },
+      { id: 15, name: "Scary", icon: "👻", bgColor: "#f0f0f0" },
+      { id: 16, name: "Toilet Flushing", icon: "🚽", bgColor: "#d6f9ff" },
+      { id: 17, name: "Woman Cough", icon: "🤒", bgColor: "#fff0d6" },
+      { id: 18, name: "Woman Sneeze", icon: "🤧", bgColor: "#ffdbe6" },
+      { id: 19, name: "Fart Song", icon: "🎵", bgColor: "#ffebfc" }
+    ];
+    
+    // Store selected sound IDs
+    const selectedSounds = [];
+    
+    // Function to create sound buttons
+    function createSoundButtons() {
+      const container = document.getElementById('soundContainer');
+      
+      sounds.forEach(sound => {
+        const button = document.createElement('div');
+        button.className = "sound-button";
+        button.setAttribute('data-id', sound.id);
+        button.innerHTML = `
+          <div class="icon" style="background-color: ${sound.bgColor}">${sound.icon}</div>
+          ${sound.name}
+        `;
+        
+        button.addEventListener('click', () => toggleSound(sound.id, button));
+        container.appendChild(button);
+      });
+    }
+    
+    // Function to toggle sound selection
+    function toggleSound(id, element) {
+      const index = selectedSounds.indexOf(id);
+      
+      if (index === -1) {
+        // Add to selected sounds
+        selectedSounds.push(id);
+        element.classList.add('selected');
+      } else {
+        // Remove from selected sounds
+        selectedSounds.splice(index, 1);
+        element.classList.remove('selected');
+      }
+      
+      console.log('Selected sound IDs:', selectedSounds);
+    }
+    
+    // Prevent double-tap zoom on iOS
+    document.addEventListener('touchend', function(event) {
+      event.preventDefault();
+      
+      // Still allow the actual click to happen
+      const target = event.target;
+      if (target.classList.contains('sound-button') || target.parentElement.classList.contains('sound-button')) {
+        const button = target.classList.contains('sound-button') ? target : target.parentElement;
+        const id = parseInt(button.getAttribute('data-id'));
+        toggleSound(id, button);
+      }
+      
+      if (target.id === 'getStartedBtn') {
+        handleGetStarted();
+      }
+    }, { passive: false });
+    
+    // Handle Get Started button click
+    document.getElementById('getStartedBtn').addEventListener('click', handleGetStarted);
+    
+    function handleGetStarted() {
+      if (selectedSounds.length === 0) {
+        alert('Please select at least one sound favorite!');
+        return;
+      }
+      
+      // Here you can send the selectedSounds array to your backend
+      // or use it in any way your application needs
+      alert(`You selected ${selectedSounds.length} sounds: IDs - ${selectedSounds.join(', ')}`);
+      
+      // For demonstration - you would replace this with your actual next step
+      console.log('Proceeding with selected sounds:', selectedSounds);
+    }
+    
+    // Initialize the page
+    document.addEventListener('DOMContentLoaded', createSoundButtons);
+    
+    // Prevent pinch zoom
+    document.addEventListener('gesturestart', function(e) {
+      e.preventDefault();
+    });
+  </script>
+</body>
+</html>
